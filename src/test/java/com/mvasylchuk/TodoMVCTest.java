@@ -21,12 +21,6 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class TodoMVCTest {
 
-    public boolean ThrowEx(int a){
-        if (a==1) {
-            throw new RuntimeException();
-        }
-        return true;
-    }
 
     @BeforeClass
     public static void oneTimeSetUp() {
