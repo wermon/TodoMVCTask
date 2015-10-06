@@ -29,8 +29,13 @@ public class TodoMVCTest {
         Configuration.browser = "chrome";
         Configuration.holdBrowserOpen = false;
         System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
-        sleep(1000);
+
+    }
+
+    @Before
+    public void SetUp(){
         open("http://todomvc.com/examples/troopjs_require/#/");
+        sleep(1000);
     }
 
     @AfterClass
