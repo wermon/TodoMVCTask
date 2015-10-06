@@ -1,14 +1,12 @@
-package com.mvasylchuk;
+package com.mvasylchuk.hw1basetest.v1;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.impl.CollectionElement;
-import org.junit.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.CollectionCondition.texts;
@@ -68,31 +66,6 @@ public class TodoMVCTest {
 
     }
 
-    @Test
-    public void testTasksReview(){
-
-        SelenideElement taskNameField = $("#new-todo");
-        taskNameField.val("task1").pressEnter();
-        taskNameField.val("task2").pressEnter();
-        taskNameField.val("task3").pressEnter();
-        taskNameField.val("task4").pressEnter();
-        ElementsCollection tasks = $$("#todo-list > li");
-        tasks.shouldHave(texts("task1", "task2", "task3", "task4"));
-        tasks.find(text("task2")).hover().find(".destroy").click();
-        tasks.shouldHave(texts("task1", "task3", "task4"));
-        //mark "task4" as complete
-        tasks.find(text("task4")).find("input.toggle").click();
-        // mark all tasks as complete
-        $("input#toggle-all").click();
-        // clear all completed tasks
-        $("button#clear-completed").click();
-        // verify that tasks list is cleared
-        $$("#todo-list > li").shouldHave(size(0));
-
-
-
-
-    }
 
 
 }
