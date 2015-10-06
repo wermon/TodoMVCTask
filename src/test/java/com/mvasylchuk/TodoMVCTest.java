@@ -29,7 +29,8 @@ public class TodoMVCTest {
         Configuration.browser = "chrome";
         Configuration.holdBrowserOpen = false;
         System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
-
+        sleep(1000);
+        open("http://todomvc.com/examples/troopjs_require/#/");
     }
 
     @AfterClass
@@ -42,9 +43,6 @@ public class TodoMVCTest {
 
     @Test
     public void testCreateTask(){
-
-
-        open("http://todomvc.com/examples/troopjs_require/#/");
 
         $("#new-todo").val("task1").pressEnter();
         $("#new-todo").val("task2").pressEnter();
@@ -68,7 +66,6 @@ public class TodoMVCTest {
     @Test
     public void testTasksReview(){
 
-        open("http://todomvc.com/examples/troopjs_require/#/");
         SelenideElement taskNameField = $("#new-todo");
         taskNameField.val("task1").pressEnter();
         taskNameField.val("task2").pressEnter();
