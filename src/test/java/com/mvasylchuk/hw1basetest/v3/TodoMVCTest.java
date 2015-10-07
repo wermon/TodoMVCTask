@@ -19,17 +19,16 @@ import static java.util.Arrays.asList;
 public class TodoMVCTest {
 
     @BeforeClass
-    public static void oneTimeSetUp() {
-        // one-time initialization code
+    public static void SetUp() {
+
         System.out.println("@BeforeClass - oneTimeSetUp");
         Configuration.browser = "chrome";
-        Configuration.holdBrowserOpen = false;
         System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
 
     }
 
     @Before
-    public void SetUp(){
+    public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
         sleep(1000);
     }
@@ -39,45 +38,33 @@ public class TodoMVCTest {
     @Test
     public void testTasksBase(){
 
-        //create tasks
+
         createTasks("1", "2", "3", "4");
         assertTasksAre("1", "2", "3", "4");
 
-        //delete 2d task
         deleteTask("2");
         assertTasksAre("1", "3", "4");
 
-        //mark "4" as complete
         toggle("4");
 
-        // remove completed 4th task
         clearCompleted();
         assertTasksAre("1", "3");
 
-        // mark all tasks as complete
         toggleAll();
 
-        // clear all completed tasks
+
         clearCompleted();
-        // verify that tasks list is cleared
-        $$("#todo-list > li").shouldBe(empty);
-
-        sleep(2000);
-
+        tasks.shouldBe(empty);
 
     }
 
     private void clearCompleted(){
-        $("button#clear-completed").click();
-    }
-
-    private void createTask(String taskText){
-        taskNameField.val(taskText).pressEnter();
+        $("#clear-completed").click();
     }
 
     private void createTasks(String... taskTexts){
         for (String text: taskTexts){
-            createTask(text);
+            $("#new-todo").val(text).pressEnter();
         }
     }
 
@@ -90,16 +77,14 @@ public class TodoMVCTest {
     }
 
     private void toggleAll(){
-        $("input#toggle-all").click();
+        $("#toggle-all").click();
     }
 
-    //Assetions
     private void assertTasksAre(String... texts){
         tasks.shouldHave(texts(texts));
     }
 
 
-    SelenideElement taskNameField = $("#new-todo");
     ElementsCollection tasks = $$("#todo-list > li");
 
 
