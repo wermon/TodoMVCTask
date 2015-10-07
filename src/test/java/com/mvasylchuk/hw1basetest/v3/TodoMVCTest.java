@@ -21,7 +21,6 @@ public class TodoMVCTest {
     @BeforeClass
     public static void SetUp() {
 
-        System.out.println("@BeforeClass - oneTimeSetUp");
         Configuration.browser = "chrome";
         System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
 
@@ -37,8 +36,6 @@ public class TodoMVCTest {
 
     @Test
     public void testTasksBase(){
-
-
         createTasks("1", "2", "3", "4");
         assertTasksAre("1", "2", "3", "4");
 
@@ -52,10 +49,8 @@ public class TodoMVCTest {
 
         toggleAll();
 
-
         clearCompleted();
         tasks.shouldBe(empty);
-
     }
 
     private void clearCompleted(){
@@ -83,7 +78,6 @@ public class TodoMVCTest {
     private void assertTasksAre(String... texts){
         tasks.shouldHave(texts(texts));
     }
-
 
     ElementsCollection tasks = $$("#todo-list > li");
 
