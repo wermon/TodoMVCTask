@@ -41,12 +41,10 @@ public class TodoMVCTest {
         assertTasksAre("1", "3", "4");
 
         toggle("4");
-
         clearCompleted();
         assertTasksAre("1", "3");
 
         toggleAll();
-
         clearCompleted();
         tasks.shouldBe(empty);
     }
