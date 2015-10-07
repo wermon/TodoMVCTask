@@ -7,15 +7,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.codeborne.selenide.CollectionCondition.*;
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
+import static java.util.Arrays.asList;
 
 /**
  * Created by Max on 26.09.2015.
  */
 
 public class TodoMVCTest {
-
 
     @BeforeClass
     public static void oneTimeSetUp() {
@@ -36,34 +37,28 @@ public class TodoMVCTest {
 
 
     @Test
-    public void testTasksReview(){
+    public void testTasksBase(){
 
         //create tasks
-        SelenideElement taskNameField = $("#new-todo");
-        taskNameField.val("task1").pressEnter();
-        taskNameField.val("task2").pressEnter();
-        taskNameField.val("task3").pressEnter();
-        taskNameField.val("task4").pressEnter();
-        ElementsCollection tasks = $$("#todo-list > li");
-        tasks.shouldHave(texts("task1", "task2", "task3", "task4"));
+        createTasks("1", "2", "3", "4");
+        assertTasksAre("1", "2", "3", "4");
 
-        //delete task2
-        tasks.find(text("task2")).hover().find(".destroy").click();
-        tasks.shouldHave(texts("task1", "task3", "task4"));
+        //delete 2d task
+        deleteTask("2");
+        assertTasksAre("1", "3", "4");
 
-        //mark "task4" as complete
-        tasks.find(text("task4")).find(".toggle").click();
+        //mark "4" as complete
+        toggle("4");
 
-        // remove completed task4
-        $("button#clear-completed").click();
-        tasks.shouldHave(texts("task1", "task3"));
+        // remove completed 4th task
+        clearCompleted();
+        assertTasksAre("1", "3");
 
         // mark all tasks as complete
-        $("input#toggle-all").click();
+        toggleAll();
 
         // clear all completed tasks
-        $("button#clear-completed").click();
-
+        clearCompleted();
         // verify that tasks list is cleared
         $$("#todo-list > li").shouldBe(empty);
 
@@ -71,6 +66,41 @@ public class TodoMVCTest {
 
 
     }
+
+    private void clearCompleted(){
+        $("button#clear-completed").click();
+    }
+
+    private void createTask(String taskText){
+        taskNameField.val(taskText).pressEnter();
+    }
+
+    private void createTasks(String... taskTexts){
+        for (String text: taskTexts){
+            createTask(text);
+        }
+    }
+
+    private void deleteTask(String taskText){
+        tasks.find(exactText("2")).hover().find(".destroy").click();
+    }
+
+    private void toggle(String taskText){
+        tasks.find(exactText(taskText)).find(".toggle").click();
+    }
+
+    private void toggleAll(){
+        $("input#toggle-all").click();
+    }
+
+    //Assetions
+    private void assertTasksAre(String... texts){
+        tasks.shouldHave(texts("1", "2", "3", "4"));
+    }
+
+
+    SelenideElement taskNameField = $("#new-todo");
+    ElementsCollection tasks = $$("#todo-list > li");
 
 
 }
