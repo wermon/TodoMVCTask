@@ -1,16 +1,14 @@
 package com.mvasylchuk.hw1basetest.v3;
 
 import com.codeborne.selenide.*;
-import com.codeborne.selenide.collections.ExactTexts;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Condition.exactText;
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.*;
-import static java.util.Arrays.asList;
+
 
 /**
  * Created by Max on 26.09.2015.
