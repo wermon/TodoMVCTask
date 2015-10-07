@@ -95,7 +95,7 @@ public class TodoMVCTest {
 
     //Assetions
     private void assertTasksAre(String... texts){
-        tasks.shouldHave(texts("1", "2", "3", "4"));
+        tasks.shouldHave(texts(texts));
     }
 
 
