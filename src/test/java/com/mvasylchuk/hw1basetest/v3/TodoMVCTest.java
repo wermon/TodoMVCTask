@@ -82,7 +82,7 @@ public class TodoMVCTest {
     }
 
     private void deleteTask(String taskText){
-        tasks.find(exactText("2")).hover().find(".destroy").click();
+        tasks.find(exactText(taskText)).hover().find(".destroy").click();
     }
 
     private void toggle(String taskText){
