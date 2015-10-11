@@ -28,6 +28,14 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class TodoMVCTest {
 
+    @BeforeClass
+    public static void SetUp() {
+
+        Configuration.browser = "chrome";
+        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
+
+    }
+
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
@@ -162,7 +170,7 @@ public class TodoMVCTest {
     ElementsCollection tasks = $$("#todo-list > li");
     ElementsCollection completedTasks = tasks.filter(cssClass("completed"));
     ElementsCollection activeTasks = tasks.filter(cssClass("active"));
-    SelenideElement clearButton = $("$(#clear-completed)");
+    SelenideElement clearButton = $("#clear-completed");
 
 
 }
