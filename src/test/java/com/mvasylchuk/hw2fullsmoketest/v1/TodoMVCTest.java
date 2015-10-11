@@ -1,5 +1,6 @@
 package com.mvasylchuk.hw2fullsmoketest.v1;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -16,6 +17,7 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.exactTextCaseSensitive;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -26,19 +28,10 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class TodoMVCTest {
 
-    @BeforeClass
-    public static void SetUp() {
-
-        Configuration.browser = "chrome";
-        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
-
-    }
-
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
-        sleep(1000);
-    }
+            }
 
 
 
@@ -96,18 +89,7 @@ public class TodoMVCTest {
         goToFilter("All");
         deleteTask("3");
         tasks.shouldBe(empty);
-
-        sleep(5000);
-//        deleteTask("2");
-//        assertTasksAre("1", "3", "4");
-//
-//        toggle("4");
-//        clearCompleted();
-//        assertTasksAre("1", "3");
-//
-//        toggleAll();
-//        clearCompleted();
-//        tasks.shouldBe(empty);
+        clearButton.shouldBe(hidden);
     }
 
     private void clearCompleted(){
@@ -180,7 +162,7 @@ public class TodoMVCTest {
     ElementsCollection tasks = $$("#todo-list > li");
     ElementsCollection completedTasks = tasks.filter(cssClass("completed"));
     ElementsCollection activeTasks = tasks.filter(cssClass("active"));
-
+    SelenideElement clearButton = $("$(#clear-completed)");
 
 
 }
