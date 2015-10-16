@@ -36,11 +36,12 @@ public class TodoMVCTest {
         createTasks("2", "3");
         editTaskAndSave("2", "2 is edited");
         editTaskAndCancel("3", "cancel 3");
+        assertItemsLeftCounter("2");
         deleteTask("2 is edited");
-        assertItemsLeftCounter("1");
+
         toggleAll();
-        tasks.shouldBe(empty);
-        
+        tasks.filter(visible).shouldBe(empty);
+
         goToFilter("Completed");
         assertCompletedTasksAre("1", "3");
         clearCompleted();
