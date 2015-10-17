@@ -32,7 +32,6 @@ public class TodoMVCTest {
         createTasks("1");
 
         goToFilter("Active");
-        assertSelectedFilterIs("Active");
         assertItemsLeftCounter(1);
         toggle("1");
         createTasks("2", "3");
@@ -95,19 +94,15 @@ public class TodoMVCTest {
 
     private void goToFilter(String filterName){
         if(filterName == "All" || filterName=="Active" || filterName=="Completed"){
-            $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName))).click();
+            $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName)));
         }
         else{
             System.out.println(String.format("%s is wrong input parameter of method", filterName));
                    }
     }
 
-    private void assertSelectedFilterIs(String filterName){
-        $(By.xpath(String.format("//*[@id='filters']//a[text()='%s' and @class='selected']", filterName))).click();
-    }
-
     private void assertTasksAre(String... texts){
-        tasks.shouldHave(exactTexts(texts));
+        tasks.filter(visible).shouldHave(exactTexts(texts));
     }
 
     private void assertItemsLeftCounter(int text){
