@@ -94,7 +94,7 @@ public class TodoMVCTest {
 
     private void goToFilter(String filterName){
         if(filterName == "All" || filterName=="Active" || filterName=="Completed"){
-            $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName)));
+            $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName))).click();
         }
         else{
             System.out.println(String.format("%s is wrong input parameter of method", filterName));
