@@ -2,6 +2,7 @@ package com.mvasylchuk.hw2fullsmoketest.v3;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -12,6 +13,7 @@ import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 
 /**
@@ -24,6 +26,12 @@ public class TodoMVCTest {
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
+        getWebDriver().navigate().refresh();
+    }
+
+    @After
+    public void clearData(){
+        executeJavaScript("localStorage.clear()");
     }
 
     @Test
@@ -53,6 +61,33 @@ public class TodoMVCTest {
         clearCompleted();
         tasks.shouldBe(empty);
         footer.shouldBe(hidden);
+
+    }
+
+    @Test
+    public void SaveWithEmptyName(){
+       createTasks("1");
+       editTask("1", "");
+       tasks.filter(visible).shouldBe(empty);
+    }
+
+    @Test
+    public void ActivateAll(){
+        createTasks("1", "2");
+        toggleAll();
+        toggleAll();
+        goToActive();
+        assertTasksAre("1", "2");
+        assertItemsLeftCounter(2);
+    }
+
+    @Test
+    public void SaveByClickOnOtherTask(){
+        createTasks("1", "2");
+        assertTasksAre("1", "2");
+        startEdit("1", "1 is edited");
+        tasks.find(exactText("2")).click();
+        assertTasksAre("1 is edited", "2");
 
     }
 
