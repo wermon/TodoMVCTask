@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw2fullsmoketest.experiments;
+package com.mvasylchuk.hw2end2endsmoketest.experiments;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;

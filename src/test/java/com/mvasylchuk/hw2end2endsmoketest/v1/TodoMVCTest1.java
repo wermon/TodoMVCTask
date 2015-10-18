@@ -1,16 +1,11 @@
-package com.mvasylchuk.hw2fullsmoketest.v1;
+package com.mvasylchuk.hw2end2endsmoketest.v1;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-
-import java.io.Console;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
@@ -18,7 +13,6 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Condition.exactTextCaseSensitive;
 import static com.codeborne.selenide.Selenide.*;
 
 
@@ -26,22 +20,13 @@ import static com.codeborne.selenide.Selenide.*;
  * Created by Max on 26.09.2015.
  */
 
-public class TodoMVCTest {
+public class TodoMVCTest1 {
 
-    @BeforeClass
-    public static void SetUp() {
-
-        Configuration.browser = "chrome";
-        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
-
-    }
 
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
-            }
-
-
+    }
 
     @Test
     public void testTasksE2E(){
@@ -98,6 +83,7 @@ public class TodoMVCTest {
         deleteTask("3");
         tasks.shouldBe(empty);
         clearButton.shouldBe(hidden);
+        itemsLeftCounter.shouldBe(hidden);
     }
 
     private void clearCompleted(){
@@ -124,16 +110,19 @@ public class TodoMVCTest {
 
     private void editTaskAndSave(String oldText, String newText){
 
-        $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']", oldText))).doubleClick();
-        SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
-        input.clear();
-        input.sendKeys(newText + Keys.ENTER);
+        doubleClickOnTask(oldText);
+        tasks.find(cssClass("editing")).find(".edit").setValue(newText).pressEnter();
+
+    }
+
+    private void doubleClickOnTask(String text){
+        tasks.find(exactText(text)).find("label").doubleClick();
     }
 
     private void editTaskAndCancel(String oldText, String newText){
 
-        $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']", oldText))).doubleClick();
-        SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
+        doubleClickOnTask(oldText);
+        SelenideElement input = tasks.find(cssClass("editing")).find(".edit");
         input.clear();
         input.sendKeys(newText + Keys.ESCAPE);
     }
@@ -164,13 +153,14 @@ public class TodoMVCTest {
     }
 
     private void assertItemsLeftCounter(String text){
-        $("#todo-count > strong").shouldHave(exactText(text));
+        itemsLeftCounter.shouldHave(exactText(text));
     }
 
     ElementsCollection tasks = $$("#todo-list > li");
     ElementsCollection completedTasks = tasks.filter(cssClass("completed"));
     ElementsCollection activeTasks = tasks.filter(cssClass("active"));
     SelenideElement clearButton = $("#clear-completed");
+    SelenideElement itemsLeftCounter = $("#todo-count > strong");
 
 
 }

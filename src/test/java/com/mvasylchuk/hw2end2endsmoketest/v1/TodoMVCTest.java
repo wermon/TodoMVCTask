@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw2fullsmoketest.experiments;
+package com.mvasylchuk.hw2end2endsmoketest.v1;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
@@ -10,7 +10,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
-import static com.codeborne.selenide.CollectionCondition.*;
+import static com.codeborne.selenide.CollectionCondition.exactTexts;
+import static com.codeborne.selenide.CollectionCondition.texts;
+import static com.codeborne.selenide.Condition.cssClass;
+import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -19,24 +22,20 @@ import static com.codeborne.selenide.Selenide.*;
  * Created by Max on 26.09.2015.
  */
 
-public class TodoMVCTest2 {
+public class TodoMVCTest {
 
     @BeforeClass
     public static void SetUp() {
 
-        Configuration.browser = "ie";
-        System.setProperty("webdriver.ie.driver", "D:\\GitHub\\YashakaAutomationCourse\\hw\\seleniumtest\\src\\test\\resources\\IEDriverServer.exe");
-//        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
+        Configuration.browser = "chrome";
+        System.setProperty("webdriver.chrome.driver", "D:\\Projects\\Java\\seleniumtest\\src\\test\\resources\\chromedriver.exe");
 
     }
 
     @Before
     public void OpenToMVCPage(){
-
-        executeJavaScript("localStorage.clear()");
-        refresh();
         open("http://todomvc.com/examples/troopjs_require/#/");
-    }
+            }
 
 
 
@@ -70,31 +69,31 @@ public class TodoMVCTest2 {
 
         editTaskAndSave("1", "1 is edited");
         // mark as completed
-//        toggle("1 is edited");
-//        assertCompletedTasksAre("1 is edited");
+        toggle("1 is edited");
+        assertCompletedTasksAre("1 is edited");
 
-//        goToFilter("Active");
-//        assertSelectedFilterIs("Active");
-//
-//        editTaskAndSave("2", "");
-//        assertActiveTasksAre("3");
-//
-//        editTaskAndCancel("3", "cancel of editing");
-//        createTasks("4");
-//        assertActiveTasksAre("3", "4");
-//        assertItemsLeftCounter("2");
-//
-//        toggle("4");
-//        goToFilter("Completed");
-//        assertCompletedTasksAre("1 is edited", "4");
-//
-//        clearCompleted();
-//        completedTasks.shouldBe(empty);
-//
-//        goToFilter("All");
-//        deleteTask("3");
-//        tasks.shouldBe(empty);
-//        clearButton.shouldBe(hidden);
+        goToFilter("Active");
+        assertSelectedFilterIs("Active");
+
+        editTaskAndSave("2", "");
+        assertActiveTasksAre("3");
+
+        editTaskAndCancel("3", "cancel of editing");
+        createTasks("4");
+        assertActiveTasksAre("3", "4");
+        assertItemsLeftCounter("2");
+
+        toggle("4");
+        goToFilter("Completed");
+        assertCompletedTasksAre("1 is edited", "4");
+
+        clearCompleted();
+        completedTasks.shouldBe(empty);
+
+        goToFilter("All");
+        deleteTask("3");
+        tasks.shouldBe(empty);
+        clearButton.shouldBe(hidden);
     }
 
     private void clearCompleted(){
@@ -121,13 +120,10 @@ public class TodoMVCTest2 {
 
     private void editTaskAndSave(String oldText, String newText){
 
-        SelenideElement element = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
-        sleep(1000);
-        element.doubleClick();
-//        SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
-//        input.clear();
-        sleep(30000);
-//        input.sendKeys(newText + Keys.ENTER);
+        $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']", oldText))).doubleClick();
+        SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
+        input.clear();
+        input.sendKeys(newText + Keys.ENTER);
     }
 
     private void editTaskAndCancel(String oldText, String newText){

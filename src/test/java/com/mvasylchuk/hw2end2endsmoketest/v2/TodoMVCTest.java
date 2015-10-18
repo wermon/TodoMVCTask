@@ -1,24 +1,15 @@
-package com.mvasylchuk.hw2fullsmoketest.v1;
+package com.mvasylchuk.hw2end2endsmoketest.v2;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.io.Console;
-
 import static com.codeborne.selenide.CollectionCondition.empty;
-import static com.codeborne.selenide.CollectionCondition.exactTexts;
-import static com.codeborne.selenide.CollectionCondition.texts;
-import static com.codeborne.selenide.Condition.cssClass;
-import static com.codeborne.selenide.Condition.exactText;
+import static com.codeborne.selenide.CollectionCondition.*;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Condition.exactTextCaseSensitive;
 import static com.codeborne.selenide.Selenide.*;
 
 
@@ -26,7 +17,7 @@ import static com.codeborne.selenide.Selenide.*;
  * Created by Max on 26.09.2015.
  */
 
-public class TodoMVCTest1 {
+public class TodoMVCTest {
 
 
     @Before
