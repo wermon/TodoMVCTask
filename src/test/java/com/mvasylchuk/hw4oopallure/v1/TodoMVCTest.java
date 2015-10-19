@@ -1,36 +1,23 @@
-package com.mvasylchuk.hw3end2endtestplusfeaturetests.v1;
+package com.mvasylchuk.hw4oopallure.v1;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import ru.yandex.qatools.allure.annotations.Step;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 
 /**
  * Created by Max on 26.09.2015.
  */
 
-public class TodoMVCTest {
-
-    @Before
-    public void OpenToMVCPage(){
-        open("http://todomvc.com/examples/troopjs_require/#/");
-        getWebDriver().navigate().refresh();
-    }
-
-    @After
-    public void clearData(){
-        executeJavaScript("localStorage.clear()");
-    }
+public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
 
     @Test
     public void testTasksE2E(){
@@ -86,32 +73,38 @@ public class TodoMVCTest {
         startEdit("1", "1 is edited");
         tasks.find(exactText("2")).click();
         assertTasksAre("1 is edited", "2");
-
     }
 
+
+    @Step
     private void clearCompleted(){
         $("#clear-completed").click();
         clearButton.shouldBe(hidden);
     }
 
+    @Step
     private void createTasks(String... taskTexts){
         for (String text: taskTexts){
             $("#new-todo").val(text).pressEnter();
         }
     }
 
+    @Step
     private void deleteTask(String taskText){
         tasks.find(exactText(taskText)).hover().find(".destroy").click();
     }
 
+    @Step
     private void toggle(String taskText){
         tasks.find(exactText(taskText)).find(".toggle").click();
     }
 
+    @Step
     private void toggleAll(){
         $("#toggle-all").click();
     }
 
+    @Step
     private void editTask(String oldName, String newName){
 
         startEdit(oldName, newName).setValue(newName).pressEnter();
