@@ -39,28 +39,41 @@ public class TodoMVCTest {
         assertTasksAre("1");
         assertItemsLeftCounter(1);
 
-        goToActive();
         toggle("1");
-        assertNoVisisbleTasks();
-
-        createTasks("2", "3");
-        editTask("2", "2 is edited");
-        startEdit("3", "cancel 3").sendKeys(Keys.ESCAPE);
-        assertVisibleTasksAre("2 is edited", "3");
-        assertItemsLeftCounter(2);
-
-        deleteTask("2 is edited");
-        assertVisibleTasksAre("3");
-
-        toggleAll();
-        tasks.filter(visible).shouldBe(empty);
-
-        goToCompleted();
-        assertVisibleTasksAre("1", "3");
+        assertTasksAre("1");
         assertItemsLeftCounter(0);
 
+
+        goToActive();
+        assertNoVisisbleTasks();
+        assertItemsLeftCounter(0);
+
+        createTasks("2", "3");
+        assertItemsLeftCounter(2);
+
+        editTask("2", "2 is edited");
+        deleteTask("2 is edited");
+        startEdit("3", "cancel 3").sendKeys(Keys.ESCAPE);
+        assertVisibleTasksAre("3");
+        assertItemsLeftCounter(1);
+
+        goToCompleted();
+        assertVisibleTasksAre("1");
+
+        toggle("1");
+        assertNoVisisbleTasks();
+        assertItemsLeftCounter(2);
+
+        goToActive();
+        assertVisibleTasksAre("1", "3");
+
+        toggleAll();
+        assertNoVisisbleTasks();
+        assertItemsLeftCounter(0);
+
+        goToAll();
         clearCompleted();
-        tasks.shouldBe(empty);
+        assertNoTasks();
         footer.shouldBe(hidden);
 
     }
