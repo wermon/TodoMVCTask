@@ -2,14 +2,16 @@ package com.mvasylchuk.hw2end2endsmoketest.experiments;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import static com.codeborne.selenide.CollectionCondition.*;
+import static com.codeborne.selenide.CollectionCondition.empty;
+import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 
 /**
@@ -22,78 +24,29 @@ public class TodoMVCTest {
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
+        getWebDriver().navigate().refresh();
+    }
+
+    @After
+    public void clearData(){
+        executeJavaScript("localStorage.clear()");
     }
 
     @Test
     public void testTasksE2E(){
-        createTasks("1", "2", "3");
-        assertTasksAre("1", "2", "3");
-        assertItemsLeftCounter("3");
+        createTasks("1");
+        goToActive();
+        createTasks("2");
+        toggle("2");
+        assertVisibleTasksAre("1", "2");
 
-       ;
-//
-//        toggleAll();
-//        assertCompletedTasksAre("1", "2", "3");
-//        assertItemsLeftCounter("0");
-//
-//        //mark task as active
-//        toggle("1");
-//        assertActiveTasksAre("1");
-//        assertItemsLeftCounter("1");
-//
-//        //mark all as completed
-//        toggleAll();
-//        assertCompletedTasksAre("1", "2", "3");
-//        assertItemsLeftCounter("0");
-//
-//        //mark all as Active
-//        toggleAll();
-//        assertActiveTasksAre("1", "2", "3");
-//        assertItemsLeftCounter("3");
-//
-//        editTaskAndCancel("1", "");
-//        assertTasksAre("1", "2", "3");
-        tasks.find(exactText("1")).find("label").doubleClick();
-        SelenideElement input = tasks.find(cssClass("editing")).find(".edit");
-        input.sendKeys(Keys.ESCAPE);
-        tasks.find(exactText("1")).find("label").doubleClick();
-
-
-
-
-        sleep(5000);
-//        editTaskAndSave("1", "1 is edited");
-//        // mark as completed
-//        toggle("1 is edited");
-//        assertCompletedTasksAre("1 is edited");
-//
-//        goToFilter("Active");
-//        assertSelectedFilterIs("Active");
-//
-//        editTaskAndSave("2", "");
-//        assertActiveTasksAre("3");
-//
-//        editTaskAndCancel("3", "cancel of editing");
-//        createTasks("4");
-//        assertActiveTasksAre("3", "4");
-//        assertItemsLeftCounter("2");
-//
-//        toggle("4");
-//        goToFilter("Completed");
-//        assertCompletedTasksAre("1 is edited", "4");
-//
-//        clearCompleted();
-//        completedTasks.shouldBe(empty);
-//
-//        goToFilter("All");
-//        deleteTask("3");
-//        tasks.shouldBe(empty);
-//        clearButton.shouldBe(hidden);
-//        itemsLeftCounter.shouldBe(hidden);
+        sleep(10000);
     }
+
 
     private void clearCompleted(){
         $("#clear-completed").click();
+        clearButton.shouldBe(hidden);
     }
 
     private void createTasks(String... taskTexts){
@@ -114,59 +67,54 @@ public class TodoMVCTest {
         $("#toggle-all").click();
     }
 
-    private void editTaskAndSave(String oldText, String newText){
+    private void editTask(String oldName, String newName){
 
-        doubleClickOnTask(oldText);
-        tasks.find(cssClass("editing")).find(".edit").setValue(newText).pressEnter();
-
+        startEdit(oldName, newName).setValue(newName).pressEnter();
     }
 
-    private void doubleClickOnTask(String text){
-        tasks.find(exactText(text)).find("label").doubleClick();
+    private SelenideElement startEdit(String oldName, String newName){
+        tasks.find(exactText(oldName)).find("label").doubleClick();
+        return tasks.find(cssClass("editing")).find(".edit").setValue(newName);
     }
 
-    private void editTaskAndCancel(String oldText, String newText){
-
-        doubleClickOnTask(oldText);
-        SelenideElement input = tasks.find(cssClass("editing")).find(".edit");
-        input.clear();
-        input.sendKeys(newText + Keys.ESCAPE);
+    private void goToAll(){
+        $("[href='#/']").click();
     }
 
-    private void goToFilter(String filterName){
-        if(filterName == "All" || filterName=="Active" || filterName=="Completed"){
-            $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName))).click();
-        }
-        else{
-            System.out.println(String.format("%s is wrong input parameter of method", filterName));
-                   }
+    private void goToActive(){
+        $("[href='#/active']").click();
     }
 
-    private void assertSelectedFilterIs(String filterName){
-        $(By.xpath(String.format("//*[@id='filters']//a[text()='%s' and @class='selected']", filterName))).click();
+    private void goToCompleted(){
+        $("[href='#/completed']").click();
     }
 
     private void assertTasksAre(String... texts){
         tasks.shouldHave(exactTexts(texts));
+
     }
 
-    private void assertCompletedTasksAre(String... texts){
-        completedTasks.shouldHave(texts(texts));
+    private void assertVisibleTasksAre(String... texts){
+       ElementsCollection visibleTasks = tasks.filter(visible);
+        sleep(1000);
+        visibleTasks.shouldHave(exactTexts(texts));
     }
 
-    private void assertActiveTasksAre(String... texts) {
-        activeTasks.shouldHave(texts(texts));
+    private void assertItemsLeftCounter(int counterValue){
+        $("#todo-count > strong").shouldHave(exactText(Integer.toString(counterValue)));
     }
 
-    private void assertItemsLeftCounter(String text){
-        itemsLeftCounter.shouldHave(exactText(text));
+    private void assertNoTasks(){
+        tasks.shouldBe(empty);
+    }
+
+    private void assertNoVisisbleTasks(){
+        tasks.filter(visible).shouldBe(empty);
     }
 
     ElementsCollection tasks = $$("#todo-list > li");
-    ElementsCollection completedTasks = tasks.filter(cssClass("completed"));
-    ElementsCollection activeTasks = tasks.filter(cssClass("active"));
     SelenideElement clearButton = $("#clear-completed");
-    SelenideElement itemsLeftCounter = $("#todo-count > strong");
+    SelenideElement footer = $("#footer");
 
 
 }
