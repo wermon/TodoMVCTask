@@ -1,11 +1,10 @@
-package com.mvasylchuk.hw2end2endsmoketest.v4;
+package com.mvasylchuk.hw2end2endsmoketest.v5;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.CollectionCondition.empty;
@@ -40,8 +39,6 @@ public class TodoMVCTest {
 
         toggle("1");
         assertTasksAre("1");
-        assertItemsLeftCounter(0);
-
 
         goToActive();
         assertNoVisisbleTasks();
@@ -54,23 +51,23 @@ public class TodoMVCTest {
         deleteTask("2 is edited");
         startEdit("3", "cancel 3").sendKeys(Keys.ESCAPE);
         assertVisibleTasksAre("3");
-        assertItemsLeftCounter(1);
 
         goToCompleted();
         assertVisibleTasksAre("1");
 
         toggle("1");
         assertNoVisisbleTasks();
-        assertItemsLeftCounter(2);
+        assertItemsLeftCounter(0);
 
         goToActive();
         assertVisibleTasksAre("1", "3");
 
         toggleAll();
         assertNoVisisbleTasks();
-        assertItemsLeftCounter(0);
 
         goToAll();
+        assertTasksAre("1", "3");
+
         clearCompleted();
         assertNoTasks();
         footer.shouldBe(hidden);
