@@ -57,13 +57,13 @@ public class TodoMVCTest {
 
         toggle("1");
         assertNoVisisbleTasks();
-        assertItemsLeftCounter(0);
 
         goToActive();
         assertVisibleTasksAre("1", "3");
 
         toggleAll();
         assertNoVisisbleTasks();
+        assertItemsLeftCounter(0);
 
         goToAll();
         assertTasksAre("1", "3");
