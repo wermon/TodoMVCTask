@@ -100,7 +100,7 @@ public class TodoMVCTest {
 
     private void editTask(String oldName, String newName){
 
-        startEdit(oldName, newName).setValue(newName).pressEnter();
+        startEdit(oldName, newName).pressEnter();
     }
 
     private SelenideElement startEdit(String oldName, String newName){
