@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw5.v3;
+package com.mvasylchuk.hw5.v4;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -10,6 +10,7 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static com.mvasylchuk.hw5.v4.TodoMVCTest.TaskFactory.aTask;
 
 
 /**
@@ -62,15 +63,20 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
 
     @Test
     public void SaveWithEmptyName(){
-        createTasks("1");
+        given(
+                aTask("1", TaskType.ACTIVE)
+        );
         editTask("1", "");
         assertNoVisibleTasks();
     }
 
     @Test
     public void ActivateAll(){
-        createTasks("1", "2");
-        toggleAll();
+        given(
+                aTask("1", TaskType.COMPLETED),
+                aTask("2", TaskType.COMPLETED)
+        );
+
         toggleAll();
         goToActive();
         assertVisibleTasksAre("1", "2");
@@ -79,8 +85,8 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
     @Test
     public void SaveByClickOnOtherTask(){
         given(
-                new Task("1", TaskType.ACTIVE),
-                new Task("2", TaskType.ACTIVE)
+               aTask("1", TaskType.ACTIVE),
+               aTask("2", TaskType.ACTIVE)
         );
         assertTasksAre("1", "2");
         startEdit("1", "1 is edited");
@@ -202,4 +208,11 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
             return String.format("{\\\"completed\\\":%1$s, \\\"title\\\":\\\"%2$s\\\"}", status, this.text);
         }
     }
+
+    static class TaskFactory{
+        static Task aTask(String text, TaskType taskType){
+           return new Task(text, taskType);
+        }
+    }
+
 }
