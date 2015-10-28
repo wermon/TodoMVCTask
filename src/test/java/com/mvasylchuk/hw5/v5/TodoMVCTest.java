@@ -17,7 +17,7 @@ import static com.mvasylchuk.hw5.v5.TodoMVCTest.TaskFactory.aTask;
  * Created by Max on 26.09.2015.
  */
 
-public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
+public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testTasksE2E(){
