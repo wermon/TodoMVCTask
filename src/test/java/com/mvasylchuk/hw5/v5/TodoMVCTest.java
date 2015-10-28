@@ -5,8 +5,6 @@ import com.codeborne.selenide.SelenideElement;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.ArrayList;
-
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
@@ -23,7 +21,7 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
 
     @Test
     public void testTasksE2E(){
-        smartOpenToMVCPage();
+        givenEmptyTodoMVCPage();
         createTasks("1");
         assertItemsLeftCounter(1);
 
@@ -157,13 +155,12 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
     private void assertNoTasks(){
         tasks.shouldBe(empty);
     }
-
     private void assertNoVisibleTasks(){
         tasks.filter(visible).shouldBe(empty);
     }
 
     private void given(Task...tasks){
-        smartOpenToMVCPage();
+        givenEmptyTodoMVCPage();
         StringBuilder jsStringBuilder = new StringBuilder("localStorage.setItem(\"todos-troopjs\", \"[");
         int i= 0;
         for (Task task : tasks) {
@@ -192,8 +189,14 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
         given(tasks);
     }
 
-
-    private void smartOpenToMVCPage(){
+    private void givenEmptyTodoMVCPage(){
+        smartOpenTodoMVCPage();
+        if (tasks.size() > 0){
+            executeJavaScript("localStorage.clear()");
+            getWebDriver().navigate().refresh();
+        }
+    }
+    private void smartOpenTodoMVCPage(){
         if ($("#new-todo").is(not(visible))) {
             open("http://todomvc.com/examples/troopjs_require/#/");
             getWebDriver().navigate().refresh();
