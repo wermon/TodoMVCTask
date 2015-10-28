@@ -1,9 +1,7 @@
-package com.mvasylchuk.hw3end2endtestplusfeaturetests.v2;
+package com.mvasylchuk.hw5.v2;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -29,7 +27,7 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
         assertTasksAre("1");
 
         goToActive();
-        assertNoVisisbleTasks();
+        assertNoVisibleTasks();
 
         createTasks("2", "3");
         assertItemsLeftCounter(2);
@@ -44,13 +42,13 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
         assertVisibleTasksAre("1");
 
         toggle("1");
-        assertNoVisisbleTasks();
+        assertNoVisibleTasks();
 
         goToActive();
         assertVisibleTasksAre("1", "3");
 
         toggleAll();
-        assertNoVisisbleTasks();
+        assertNoVisibleTasks();
         assertItemsLeftCounter(0);
 
         goToAll();
@@ -66,7 +64,7 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
     public void SaveWithEmptyName(){
         createTasks("1");
         editTask("1", "");
-        assertNoVisisbleTasks();
+        assertNoVisibleTasks();
     }
 
     @Test
@@ -80,7 +78,7 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
 
     @Test
     public void SaveByClickOnOtherTask(){
-        createTasks("1", "2");
+        given(TaskType.ACTIVE, "1", "2");
         assertTasksAre("1", "2");
         startEdit("1", "1 is edited");
         tasks.find(exactText("2")).click();
@@ -144,17 +142,50 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
     private void assertItemsLeftCounter(int counterValue){
         $("#todo-count>strong").shouldHave(exactText(Integer.toString(counterValue)));
     }
-
     private void assertNoTasks(){
         tasks.shouldBe(empty);
     }
 
-    private void assertNoVisisbleTasks(){
+    private void assertNoVisibleTasks(){
         tasks.filter(visible).shouldBe(empty);
+    }
+
+    private void given(TaskType taskType, String...texts){
+        StringBuilder jsStringBuilder = new StringBuilder("localStorage.setItem(\"todos-troopjs\", \"[");
+
+        String status = "";
+        if (taskType == TaskType.ACTIVE){
+           status = "false";
+        }
+        else if (taskType == TaskType.COMPLETED){
+            status = "true";
+        }
+
+        int i= 0;
+        for (String text : texts) {
+            String js = String.format("{\\\"completed\\\":%1$s, \\\"title\\\":\\\"%2$s\\\"}, ", status, text);
+
+            if (i < texts.length - 1){
+                jsStringBuilder.append(js);
+            }
+            else if (i == texts.length - 1){
+                js = String.format("{\\\"completed\\\":%1$s, \\\"title\\\":\\\"%2$s\\\"}", status, text);
+                jsStringBuilder.append(js);
+            }
+            i++;
+        }
+
+        jsStringBuilder.append("]\")");
+        executeJavaScript(jsStringBuilder.toString());
+        getWebDriver().navigate().refresh();
     }
 
     ElementsCollection tasks = $$("#todo-list > li");
     SelenideElement clearButton = $("#clear-completed");
     SelenideElement footer = $("#footer");
 
+    public enum TaskType{
+        ACTIVE,
+        COMPLETED
+    }
 }
