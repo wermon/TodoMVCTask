@@ -18,6 +18,7 @@ import static com.mvasylchuk.hw5.v6.TodoMVCTest.TaskType.*;
  * Created by Max on 26.09.2015.
  */
 
+
 public class TodoMVCTest extends BaseTest {
 
     @Test
