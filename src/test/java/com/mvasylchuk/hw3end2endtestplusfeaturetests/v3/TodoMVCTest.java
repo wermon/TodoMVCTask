@@ -61,7 +61,7 @@ public class TodoMVCTest extends AtTodoMVCPageWithClearedDataAfterEachTest {
     }
 
     @Test
-    public void SaveWithEmptyName(){
+    public void testSaveWithEmptyNameOnAll(){
         createTasks("1");
         editTask("1", "");
         assertNoVisisbleTasks();
