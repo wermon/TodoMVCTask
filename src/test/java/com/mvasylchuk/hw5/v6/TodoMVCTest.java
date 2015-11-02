@@ -83,8 +83,8 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testSaveByClickOnOtherTaskOnAll(){
         given(
-                aTask("1", TaskType.ACTIVE),
-                aTask("2", TaskType.ACTIVE)
+                aTask("1", ACTIVE),
+                aTask("2", ACTIVE)
         );
         assertTasksAre("1", "2");
         startEdit("1", "1 is edited");
@@ -144,8 +144,8 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testActivateAllOnAll(){
         given(
-                aTask("1", TaskType.COMPLETED),
-                aTask("2", TaskType.COMPLETED)
+                aTask("1", COMPLETED),
+                aTask("2", COMPLETED)
         );
 
         toggleAll();
@@ -156,8 +156,8 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testClearCompletedOnAll(){
         given(
-                aTask("1", TaskType.COMPLETED),
-                aTask("2", TaskType.COMPLETED)
+                aTask("1", COMPLETED),
+                aTask("2", COMPLETED)
         );
         clearCompleted();
         footer.shouldBe(hidden);
