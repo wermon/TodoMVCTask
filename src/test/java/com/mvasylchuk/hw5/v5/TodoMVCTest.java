@@ -63,7 +63,7 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void SaveWithEmptyName(){
+    public void saveWithEmptyName(){
         given(
                 "1"
         );
@@ -72,7 +72,7 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void ActivateAll(){
+    public void activateAll(){
         given(
                 aTask("1", TaskType.COMPLETED),
                 aTask("2", TaskType.COMPLETED)
@@ -84,7 +84,7 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void SaveByClickOnOtherTask(){
+    public void saveByClickOnOtherTask(){
         given(
                aTask("1", TaskType.ACTIVE),
                aTask("2", TaskType.ACTIVE)

@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw5.experiments;
+package com.mvasylchuk.hw5.v6;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -10,7 +10,8 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static com.mvasylchuk.hw5.experiments.TodoMVCTest.TaskFactory.aTask;
+import static com.mvasylchuk.hw5.v6.TodoMVCTest.TaskFactory.aTask;
+import static com.mvasylchuk.hw5.v6.TodoMVCTest.TaskType.*;
 
 
 /**
@@ -62,8 +63,46 @@ public class TodoMVCTest extends BaseTest {
 
     }
 
+    //All Filter
     @Test
-    public void SaveWithEmptyName(){
+    public void testCreateTaskOnAll(){
+        givenEmptyTodoMVCPage();
+        createTasks("1");
+        assertItemsLeftCounter(1);
+        assertTasksAre("1");
+    }
+
+    @Test
+    public void testEditTaskOnAll(){
+        given("1");
+        editTask("1", "2");
+        assertItemsLeftCounter(1);
+        assertTasksAre("2");
+    }
+
+    @Test
+    public void testSaveByClickOnOtherTaskOnAll(){
+        given(
+                aTask("1", TaskType.ACTIVE),
+                aTask("2", TaskType.ACTIVE)
+        );
+        assertTasksAre("1", "2");
+        startEdit("1", "1 is edited");
+        tasks.find(exactText("2")).click();
+        assertTasksAre("1 is edited", "2");
+
+    }
+
+    @Test
+    public void testCancelEditWithEscOnAll(){
+        given("1");
+        startEdit("1","2").sendKeys(Keys.ESCAPE);
+        assertItemsLeftCounter(1);
+        assertTasksAre("1");
+    }
+
+    @Test
+    public void testSaveWithEmptyNameOnAllFilter(){
         given(
                 "1"
         );
@@ -72,7 +111,38 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void ActivateAll(){
+    public void testDeleteOnAll(){
+        given("1");
+        deleteTask("1");
+        assertNoTasks();
+        assertItemsLeftCounter(0);
+    }
+
+    @Test
+    public void testCompleteOnAll(){
+        given("1");
+        toggle("1");
+        assertTasksAre("1");
+        assertItemsLeftCounter(0);
+    }
+
+    @Test
+    public void testCompleteAllOnAll(){
+        given("1", "2");
+        toggleAll();
+        assertTasksAre("1", "2");
+        assertItemsLeftCounter(0);
+    }
+
+    @Test
+    public void testActivateOnAll(){
+        given(COMPLETED, "1");
+        toggle("1");
+        assertItemsLeftCounter(1);
+    }
+
+    @Test
+    public void testActivateAllOnAll(){
         given(
                 aTask("1", TaskType.COMPLETED),
                 aTask("2", TaskType.COMPLETED)
@@ -80,21 +150,116 @@ public class TodoMVCTest extends BaseTest {
 
         toggleAll();
         goToActive();
-        assertVisibleTasksAre("1", "2");
+        assertTasksAre("1", "2");
     }
 
     @Test
-    public void SaveByClickOnOtherTask(){
+    public void testClearCompletedOnAll(){
         given(
-               aTask("1", TaskType.ACTIVE),
-               aTask("2", TaskType.ACTIVE)
+                aTask("1", TaskType.COMPLETED),
+                aTask("2", TaskType.COMPLETED)
         );
-        assertTasksAre("1", "2");
-        startEdit("1", "1 is edited");
-        tasks.find(exactText("2")).click();
-        assertTasksAre("1 is edited", "2");
-
+        clearCompleted();
+        footer.shouldBe(hidden);
+        assertNoTasks();
     }
+
+    //Active Filter
+    @Test
+    public void testCreateTaskOnActive(){
+        givenEmptyTodoMVCPage();
+        goToActive();
+        createTasks("1");
+        assertItemsLeftCounter(1);
+        assertVisibleTasksAre("1");
+    }
+
+    @Test
+    public void testEditTaskOnActive(){
+        given("1");
+        goToActive();
+        editTask("1", "2");
+        assertItemsLeftCounter(1);
+        assertVisibleTasksAre("2");
+    }
+
+    @Test
+    public void testCancelEditWithEscOnActive(){
+        given("1");
+        goToActive();
+        startEdit("1","2").sendKeys(Keys.ESCAPE);
+        assertItemsLeftCounter(1);
+        assertVisibleTasksAre("1");
+    }
+
+    @Test
+    public void testDeleteOnActive(){
+        given("1");
+        goToActive();
+        deleteTask("1");
+        assertNoVisibleTasks();
+        footer.shouldBe(hidden);
+    }
+
+    @Test
+    public void testCompleteOnActive(){
+        given("1");
+        goToActive();
+        toggle("1");
+        assertNoVisibleTasks();
+        assertItemsLeftCounter(0);
+    }
+
+    //Completed filter
+    @Test
+    public void testEditTaskOnCompleted(){
+        given(COMPLETED, "1");
+        goToCompleted();
+        editTask("1", "2");
+        assertItemsLeftCounter(0);
+        assertVisibleTasksAre("2");
+    }
+
+    @Test
+    public void testCancelEditWithEscOnCompleted(){
+        given(COMPLETED, "1");
+        goToCompleted();
+        startEdit("1","2").sendKeys(Keys.ESCAPE);
+        assertItemsLeftCounter(0);
+        assertVisibleTasksAre("1");
+    }
+
+    @Test
+    public void testDeleteOnCompleted(){
+        given(COMPLETED, "1");
+        goToCompleted();
+        deleteTask("1");
+        assertNoVisibleTasks();
+        footer.shouldBe(hidden);
+    }
+
+    @Test
+    public void testActivateOnCompleted(){
+        given(COMPLETED, "1");
+        goToCompleted();
+        toggle("1");
+        assertNoVisibleTasks();
+        assertItemsLeftCounter(1);
+    }
+
+    @Test
+    public void testClearCompletedOnCompleted(){
+        given(
+                aTask("1", COMPLETED),
+                aTask("2", COMPLETED),
+                aTask("3", ACTIVE)
+        );
+        goToCompleted();
+        clearCompleted();
+        assertItemsLeftCounter(1);
+        assertNoVisibleTasks();
+    }
+
 
     private void clearCompleted(){
         clearButton.click();
@@ -108,7 +273,7 @@ public class TodoMVCTest extends BaseTest {
     }
 
     private void deleteTask(String taskText){
-        tasks.find(exactText(taskText)).hover().find(".destroy").click();
+        tasks.find(exactText(taskText)).hover().find(".destroy").shouldBe(enabled).click();
     }
 
     private void toggle(String taskText){
@@ -189,12 +354,22 @@ public class TodoMVCTest extends BaseTest {
         given(tasks);
     }
 
+    private void given  (TaskType taskType, String...texts){
+        Task[] tasks = new Task[texts.length];
+        int i= 0;
+        for(String text : texts){
+            tasks[i] = (aTask(text, taskType));
+            i++;
+        }
+        given(tasks);
+    }
+
     private void givenEmptyTodoMVCPage(){
         smartOpenTodoMVCPage();
-        //if (tasks.size() > 0){
+        if (tasks.size() > 0){
             executeJavaScript("localStorage.clear()");
             getWebDriver().navigate().refresh();
-       // }
+        }
     }
     private void smartOpenTodoMVCPage(){
         if ($("#new-todo").is(not(visible))) {
