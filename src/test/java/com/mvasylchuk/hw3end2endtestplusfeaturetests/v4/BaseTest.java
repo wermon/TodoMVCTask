@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class BaseTest {
     @After
-    public void PostScreenshot() throws IOException {
+    public void postScreenshot() throws IOException {
         screenshot();
     }
 

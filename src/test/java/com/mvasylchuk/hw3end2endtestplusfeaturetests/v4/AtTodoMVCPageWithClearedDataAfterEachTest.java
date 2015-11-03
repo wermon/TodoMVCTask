@@ -13,7 +13,7 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 public class  AtTodoMVCPageWithClearedDataAfterEachTest extends BaseTest {
 
     @Before
-    public void OpenToMVCPage(){
+    public void openToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
         getWebDriver().navigate().refresh();
     }
