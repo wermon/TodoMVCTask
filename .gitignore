@@ -1,1 +1,4 @@
 /seleniumtest.iml
+/.idea
+/target
+/build
