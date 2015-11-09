@@ -136,10 +136,11 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testCreateTaskOnActive(){
         givenEmptyTodoMVCPage();
+        given("1");
         goToActive();
-        createTasks("1");
-        assertItemsLeftCounter(1);
-        assertVisibleTasksAre("1");
+        createTasks("2");
+        assertItemsLeftCounter(2);
+        assertVisibleTasksAre("1","2");
     }
 
     @Test
@@ -337,14 +338,13 @@ public class TodoMVCTest extends BaseTest {
         if (tasks.size() > 0){
             executeJavaScript("localStorage.clear()");
             open(toDoMVCPageUrl);
-
         }
+        refresh();
     }
     private void smartOpenTodoMVCPage(){
 
         if (!Objects.equals(getWebDriver().getCurrentUrl(), toDoMVCPageUrl)) {
             open(toDoMVCPageUrl);
-
         }
 
     }
@@ -353,7 +353,7 @@ public class TodoMVCTest extends BaseTest {
     ElementsCollection tasks = $$("#todo-list > li");
     SelenideElement clearButton = $("#clear-completed");
     SelenideElement footer = $("#footer");
-    String toDoMVCPageUrl = "http://todomvc.com/examples/troopjs_require/#/";
+    String toDoMVCPageUrl = "http://todomvc.com/examples/troopjs_require/";
 
     public enum TaskType{
         ACTIVE,
