@@ -5,6 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
+import java.util.Objects;
+
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
@@ -12,6 +14,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.ACTIVE;
 import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.COMPLETED;
+import static org.junit.Assert.assertEquals;
 
 
 /**
@@ -95,7 +98,7 @@ public class TodoMVCTest extends BaseTest {
         given("1");
         deleteTask("1");
         assertNoTasks();
-        assertItemsLeftCounter(0);
+        footer.is(hidden);
     }
 
     @Test
@@ -333,20 +336,24 @@ public class TodoMVCTest extends BaseTest {
         smartOpenTodoMVCPage();
         if (tasks.size() > 0){
             executeJavaScript("localStorage.clear()");
-            refresh();
+            open(toDoMVCPageUrl);
+
         }
     }
     private void smartOpenTodoMVCPage(){
-        if ($("#new-todo").is(not(visible))) {
-            open("http://todomvc.com/examples/troopjs_require/#/");
-            refresh();
+
+        if (!Objects.equals(getWebDriver().getCurrentUrl(), toDoMVCPageUrl)) {
+            open(toDoMVCPageUrl);
+
         }
+
     }
 
 
     ElementsCollection tasks = $$("#todo-list > li");
     SelenideElement clearButton = $("#clear-completed");
     SelenideElement footer = $("#footer");
+    String toDoMVCPageUrl = "http://todomvc.com/examples/troopjs_require/#/";
 
     public enum TaskType{
         ACTIVE,
