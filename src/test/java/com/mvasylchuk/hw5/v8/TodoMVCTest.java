@@ -10,7 +10,6 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskFactory.aTask;
 import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.ACTIVE;
 import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.COMPLETED;
 
@@ -66,10 +65,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testSaveByClickOnOtherTaskOnAll(){
-        given(
-                aTask("1", ACTIVE),
-                aTask("2", ACTIVE)
-        );
+        given("1", "2");
         assertTasksAre("1", "2");
         startEdit("1", "1 is edited");
         tasks.find(exactText("2")).click();
@@ -337,13 +333,13 @@ public class TodoMVCTest extends BaseTest {
         smartOpenTodoMVCPage();
         if (tasks.size() > 0){
             executeJavaScript("localStorage.clear()");
-            getWebDriver().navigate().refresh();
+            refresh();
         }
     }
     private void smartOpenTodoMVCPage(){
         if ($("#new-todo").is(not(visible))) {
             open("http://todomvc.com/examples/troopjs_require/#/");
-            getWebDriver().navigate().refresh();
+            refresh();
         }
     }
 
@@ -353,36 +349,30 @@ public class TodoMVCTest extends BaseTest {
     SelenideElement footer = $("#footer");
 
     public enum TaskType{
-        ACTIVE("false"),
-        COMPLETED("true");
+        ACTIVE,
+        COMPLETED;
 
-        private String completedStatus;
-        TaskType(String completedStatus) {
-            this.completedStatus = completedStatus;
-        }
     }
-
 
     static class Task{
         String text;
-        String status;
+        TaskType status;
 
         Task(String text, TaskType taskType){
 
-            this.status = taskType.completedStatus;
+            this.status = taskType;
             this.text = text;
         }
 
         public String toString(){
 
-            return String.format("{\\\"completed\\\":%1$s, \\\"title\\\":\\\"%2$s\\\"}", status, this.text);
+            return String.format("{\\\"completed\\\":%1$s, \\\"title\\\":\\\"%2$s\\\"}", status == TaskType.COMPLETED ? "true" : "false", this.text);
         }
     }
 
-    static class TaskFactory{
-        static Task aTask(String text, TaskType taskType){
-           return new Task(text, taskType);
-        }
+    static Task aTask(String text, TaskType taskType){
+        return new Task(text, taskType);
     }
+
 
 }
