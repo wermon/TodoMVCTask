@@ -296,16 +296,14 @@ public class TodoMVCTest extends BaseTest {
     private void given(Task...tasks){
         givenEmptyTodoMVCPage();
         StringBuilder jsStringBuilder = new StringBuilder("localStorage.setItem(\"todos-troopjs\", \"[");
-        int i= 0;
-        for (Task task : tasks) {
-            String taskData= task.toString();
-            if (i < tasks.length - 1){
-                jsStringBuilder.append(taskData).append(", ");
+
+        for (int i= 0; i < tasks.length; i++) {
+            String taskData= tasks[i].toString();
+
+            jsStringBuilder.append(taskData);
+            if(i < tasks.length - 1){
+                jsStringBuilder.append(",");
             }
-            else if (i == tasks.length - 1){
-                jsStringBuilder.append(taskData);
-            }
-            i++;
         }
         jsStringBuilder.append("]\")");
 
@@ -315,33 +313,32 @@ public class TodoMVCTest extends BaseTest {
 
     private void given  (String...texts){
         Task[] tasks = new Task[texts.length];
-        int i= 0;
-        for(String text : texts){
-            tasks[i] = (aTask(text, TaskType.ACTIVE));
-            i++;
+
+        for(int i = 0; i < texts.length; i++){
+            tasks[i] = (aTask(texts[i], TaskType.ACTIVE));
+
         }
         given(tasks);
     }
 
     private void given  (TaskType taskType, String...texts){
         Task[] tasks = new Task[texts.length];
-        int i= 0;
-        for(String text : texts){
-            tasks[i] = (aTask(text, taskType));
-            i++;
+        for(int i = 0; i < texts.length; i++){
+            tasks[i] = (aTask(texts[i], taskType));
+
         }
         given(tasks);
     }
 
     private void givenEmptyTodoMVCPage(){
-        smartOpenTodoMVCPage();
+        ensureOpenedTodoMVCPage();
         if (tasks.size() > 0){
             executeJavaScript("localStorage.clear()");
             open(toDoMVCPageUrl);
         }
         refresh();
     }
-    private void smartOpenTodoMVCPage(){
+    private void ensureOpenedTodoMVCPage(){
 
         if (!Objects.equals(getWebDriver().getCurrentUrl(), toDoMVCPageUrl)) {
             open(toDoMVCPageUrl);
