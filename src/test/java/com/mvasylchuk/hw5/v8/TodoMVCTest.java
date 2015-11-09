@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw5.v6;
+package com.mvasylchuk.hw5.v8;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -10,8 +10,9 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static com.mvasylchuk.hw5.v6.TodoMVCTest.TaskFactory.aTask;
-import static com.mvasylchuk.hw5.v6.TodoMVCTest.TaskType.*;
+import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskFactory.aTask;
+import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.ACTIVE;
+import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.COMPLETED;
 
 
 /**
@@ -25,42 +26,24 @@ public class TodoMVCTest extends BaseTest {
     public void testTasksLifeCycle(){
         givenEmptyTodoMVCPage();
         createTasks("1");
-        assertItemsLeftCounter(1);
-
         toggle("1");
-        assertTasksAre("1");
 
         goToActive();
         assertNoVisibleTasks();
-
-        createTasks("2", "3");
-        assertItemsLeftCounter(2);
-        assertVisibleTasksAre("2", "3");
-
-        editTask("2", "2 is edited");
-        deleteTask("2 is edited");
-        startEdit("3", "cancel 3").sendKeys(Keys.ESCAPE);
-        assertVisibleTasksAre("3");
 
         goToCompleted();
-        assertVisibleTasksAre("1");
+        editTask("1", "1 is edited");
 
-        toggle("1");
+        toggle("1 is edited");
         assertNoVisibleTasks();
 
         goToActive();
-        assertVisibleTasksAre("1", "3");
-
-        toggleAll();
+        toggle("1 is edited");
         assertNoVisibleTasks();
-        assertItemsLeftCounter(0);
 
         goToAll();
-        assertTasksAre("1", "3");
-
-        clearCompleted();
+        deleteTask("1 is edited");
         assertNoTasks();
-        footer.shouldBe(hidden);
 
     }
 
@@ -128,14 +111,6 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void testCompleteAllOnAll(){
-        given("1", "2");
-        toggleAll();
-        assertTasksAre("1", "2");
-        assertItemsLeftCounter(0);
-    }
-
-    @Test
     public void testActivateOnAll(){
         given(COMPLETED, "1");
         toggle("1");
@@ -144,11 +119,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testActivateAllOnAll(){
-        given(
-                aTask("1", COMPLETED),
-                aTask("2", COMPLETED)
-        );
-
+        given(COMPLETED, "1", "2");
         toggleAll();
         goToActive();
         assertTasksAre("1", "2");
@@ -156,10 +127,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testClearCompletedOnAll(){
-        given(
-                aTask("1", COMPLETED),
-                aTask("2", COMPLETED)
-        );
+        given(COMPLETED, "1", "2");
         clearCompleted();
         footer.shouldBe(hidden);
         assertNoTasks();
@@ -185,15 +153,6 @@ public class TodoMVCTest extends BaseTest {
     }
 
     @Test
-    public void testCancelEditWithEscOnActive(){
-        given("1");
-        goToActive();
-        startEdit("1","2").sendKeys(Keys.ESCAPE);
-        assertItemsLeftCounter(1);
-        assertVisibleTasksAre("1");
-    }
-
-    @Test
     public void testDeleteOnActive(){
         given("1");
         goToActive();
@@ -211,6 +170,15 @@ public class TodoMVCTest extends BaseTest {
         assertItemsLeftCounter(0);
     }
 
+    @Test
+    public void testCompleteAllOnActive(){
+        given("1", "2");
+        goToActive();
+        toggleAll();
+        assertNoVisibleTasks();
+        assertItemsLeftCounter(0);
+    }
+
     //Completed filter
     @Test
     public void testEditTaskOnCompleted(){
@@ -219,15 +187,6 @@ public class TodoMVCTest extends BaseTest {
         editTask("1", "2");
         assertItemsLeftCounter(0);
         assertVisibleTasksAre("2");
-    }
-
-    @Test
-    public void testCancelEditWithEscOnCompleted(){
-        given(COMPLETED, "1");
-        goToCompleted();
-        startEdit("1","2").sendKeys(Keys.ESCAPE);
-        assertItemsLeftCounter(0);
-        assertVisibleTasksAre("1");
     }
 
     @Test
@@ -259,6 +218,15 @@ public class TodoMVCTest extends BaseTest {
         clearCompleted();
         assertItemsLeftCounter(1);
         assertNoVisibleTasks();
+    }
+
+    @Test
+    public void testActivateAllOnCompleted(){
+        given(COMPLETED, "1", "2");
+        goToCompleted();
+        toggleAll();
+        assertNoVisibleTasks();
+        assertItemsLeftCounter(2);
     }
 
 

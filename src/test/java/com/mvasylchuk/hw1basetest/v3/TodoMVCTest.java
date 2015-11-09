@@ -27,7 +27,7 @@ public class TodoMVCTest {
     @Before
     public void OpenToMVCPage(){
         open("http://todomvc.com/examples/troopjs_require/#/");
-        sleep(1000);
+        sleep(1000  );
     }
 
 
