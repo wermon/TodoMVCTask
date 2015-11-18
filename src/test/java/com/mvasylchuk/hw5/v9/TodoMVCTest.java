@@ -5,8 +5,6 @@ import com.codeborne.selenide.SelenideElement;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.Objects;
-
 import static com.codeborne.selenide.CollectionCondition.empty;
 import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
@@ -59,7 +57,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testEditTaskOnAll(){
-        given("1");
+        givenActive("1");
         editTask("1", "2");
         assertItemsLeftCounter(1);
         assertTasksAre("2");
@@ -67,7 +65,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testSaveByClickOnOtherTaskOnAll(){
-        given("1", "2");
+        givenActive("1", "2");
         assertTasksAre("1", "2");
         startEdit("1", "1 is edited");
         tasks.find(exactText("2")).click();
@@ -77,7 +75,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testCancelEditWithEscOnAll(){
-        given("1");
+        givenActive("1");
         startEdit("1","2").sendKeys(Keys.ESCAPE);
         assertItemsLeftCounter(1);
         assertTasksAre("1");
@@ -85,14 +83,14 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testSaveWithEmptyNameOnAllFilter(){
-        given("1");
+        givenActive("1");
         editTask("1", "");
         assertNoVisibleTasks();
     }
 
     @Test
     public void testDeleteOnAll(){
-        given("1");
+        givenActive("1");
         deleteTask("1");
         assertNoTasks();
         footer.is(hidden);
@@ -100,7 +98,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testCompleteOnAll(){
-        given("1");
+        givenActive("1");
         toggle("1");
         assertTasksAre("1");
         assertItemsLeftCounter(0);
@@ -133,7 +131,7 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testCreateTaskOnActive(){
         givenEmptyTodoMVCPage();
-        given("1");
+        givenActive("1");
         goToActive();
         createTasks("2");
         assertItemsLeftCounter(2);
@@ -142,7 +140,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testEditTaskOnActive(){
-        given("1");
+        givenActive("1");
         goToActive();
         editTask("1", "2");
         assertItemsLeftCounter(1);
@@ -151,7 +149,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testDeleteOnActive(){
-        given("1");
+        givenActive("1");
         goToActive();
         deleteTask("1");
         assertNoVisibleTasks();
@@ -160,7 +158,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testCompleteOnActive(){
-        given("1");
+        givenActive("1");
         goToActive();
         toggle("1");
         assertNoVisibleTasks();
@@ -169,7 +167,7 @@ public class TodoMVCTest extends BaseTest {
 
     @Test
     public void testCompleteAllOnActive(){
-        given("1", "2");
+        givenActive("1", "2");
         goToActive();
         toggleAll();
         assertNoVisibleTasks();
@@ -309,7 +307,7 @@ public class TodoMVCTest extends BaseTest {
         getWebDriver().navigate().refresh();
     }
 
-    private void given  (String...texts){
+    private void givenActive(String... texts){
         given(TaskType.ACTIVE, texts);
     }
 
