@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw5.v8;
+package com.mvasylchuk.hw5.v9;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -12,9 +12,8 @@ import static com.codeborne.selenide.CollectionCondition.exactTexts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.ACTIVE;
-import static com.mvasylchuk.hw5.v8.TodoMVCTest.TaskType.COMPLETED;
-import static org.junit.Assert.assertEquals;
+import static com.mvasylchuk.hw5.v9.TodoMVCTest.TaskType.ACTIVE;
+import static com.mvasylchuk.hw5.v9.TodoMVCTest.TaskType.COMPLETED;
 
 
 /**
@@ -292,7 +291,8 @@ public class TodoMVCTest extends BaseTest {
     }
 
     private void given(Task...tasks){
-        givenEmptyTodoMVCPage();
+
+        ensureOpenedTodoMVCPage();
         StringBuilder jsStringBuilder = new StringBuilder("localStorage.setItem(\"todos-troopjs\", \"[");
 
         for (int i= 0; i < tasks.length; i++) {
@@ -310,13 +310,7 @@ public class TodoMVCTest extends BaseTest {
     }
 
     private void given  (String...texts){
-        Task[] tasks = new Task[texts.length];
-
-        for(int i = 0; i < texts.length; i++){
-            tasks[i] = (aTask(texts[i], TaskType.ACTIVE));
-
-        }
-        given(tasks);
+        given(TaskType.ACTIVE, texts);
     }
 
     private void given  (TaskType taskType, String...texts){
@@ -328,17 +322,14 @@ public class TodoMVCTest extends BaseTest {
         given(tasks);
     }
 
+    String toDoMVCPageUrl = "https://todomvc4tasj.herokuapp.com";
+
     private void givenEmptyTodoMVCPage(){
-        ensureOpenedTodoMVCPage();
-        if (tasks.size() > 0){
-            executeJavaScript("localStorage.clear()");
-            open(toDoMVCPageUrl);
-        }
-        refresh();
+        given(); // ambiguous method call. How to fix?
     }
     private void ensureOpenedTodoMVCPage(){
 
-        if (!Objects.equals(getWebDriver().getCurrentUrl(), toDoMVCPageUrl)) {
+        if (!getWebDriver().getCurrentUrl().equals(toDoMVCPageUrl)) {
             open(toDoMVCPageUrl);
         }
 
@@ -348,7 +339,6 @@ public class TodoMVCTest extends BaseTest {
     ElementsCollection tasks = $$("#todo-list > li");
     SelenideElement clearButton = $("#clear-completed");
     SelenideElement footer = $("#footer");
-    String toDoMVCPageUrl = "http://todomvc.com/examples/troopjs_require/";
 
     public enum TaskType{
         ACTIVE,
