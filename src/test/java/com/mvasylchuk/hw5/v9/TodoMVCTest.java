@@ -50,9 +50,9 @@ public class TodoMVCTest extends BaseTest {
     @Test
     public void testCreateTaskOnAll(){
         givenEmptyTodoMVCPage();
-        createTasks("1");
-        assertItemsLeftCounter(1);
-        assertTasksAre("1");
+        createTasks("1","2","3");
+        assertItemsLeftCounter(3);
+        assertTasksAre("1","2","3");
     }
 
     @Test
@@ -102,6 +102,7 @@ public class TodoMVCTest extends BaseTest {
         toggle("1");
         assertTasksAre("1");
         assertItemsLeftCounter(0);
+        clearButton.shouldBe(visible);
     }
 
     @Test
@@ -224,6 +225,8 @@ public class TodoMVCTest extends BaseTest {
         assertItemsLeftCounter(2);
     }
 
+    SelenideElement footer = $("#footer");
+    SelenideElement clearButton = $("#clear-completed");
 
     private void clearCompleted(){
         clearButton.click();
@@ -235,6 +238,8 @@ public class TodoMVCTest extends BaseTest {
             $("#new-todo").shouldBe(enabled).val(text).pressEnter();
         }
     }
+
+    ElementsCollection tasks = $$("#todo-list > li");
 
     private void deleteTask(String taskText){
         tasks.find(exactText(taskText)).hover().find(".destroy").shouldBe(enabled).click();
@@ -281,14 +286,16 @@ public class TodoMVCTest extends BaseTest {
     private void assertItemsLeftCounter(int counterValue){
         $("#todo-count>strong").shouldHave(exactText(Integer.toString(counterValue)));
     }
+
     private void assertNoTasks(){
         tasks.shouldBe(empty);
     }
+
     private void assertNoVisibleTasks(){
         tasks.filter(visible).shouldBe(empty);
     }
 
-    private void given(Task...tasks){
+    private void given(Task... tasks){
 
         ensureOpenedTodoMVCPage();
         StringBuilder jsStringBuilder = new StringBuilder("localStorage.setItem(\"todos-troopjs\", \"[");
@@ -311,7 +318,7 @@ public class TodoMVCTest extends BaseTest {
         given(TaskType.ACTIVE, texts);
     }
 
-    private void given  (TaskType taskType, String...texts){
+    private void given  (TaskType taskType, String... texts){
         Task[] tasks = new Task[texts.length];
         for(int i = 0; i < texts.length; i++){
             tasks[i] = (aTask(texts[i], taskType));
@@ -323,8 +330,9 @@ public class TodoMVCTest extends BaseTest {
     String toDoMVCPageUrl = "https://todomvc4tasj.herokuapp.com";
 
     private void givenEmptyTodoMVCPage(){
-        given(); // ambiguous method call. How to fix?
+        given();
     }
+
     private void ensureOpenedTodoMVCPage(){
 
         if (!getWebDriver().getCurrentUrl().equals(toDoMVCPageUrl)) {
@@ -332,11 +340,6 @@ public class TodoMVCTest extends BaseTest {
         }
 
     }
-
-
-    ElementsCollection tasks = $$("#todo-list > li");
-    SelenideElement clearButton = $("#clear-completed");
-    SelenideElement footer = $("#footer");
 
     public enum TaskType{
         ACTIVE,
