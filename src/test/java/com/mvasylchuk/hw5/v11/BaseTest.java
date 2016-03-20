@@ -1,4 +1,4 @@
-package com.mvasylchuk.hw3end2endtestplusfeaturetests.v3;
+package com.mvasylchuk.hw5.v11;
 
 import com.codeborne.selenide.Screenshots;
 import com.google.common.io.Files;
@@ -22,5 +22,6 @@ public class BaseTest {
         File screenshot = Screenshots.takeScreenShotAsFile();
         return Files.toByteArray(screenshot);
     }
+
 
 }

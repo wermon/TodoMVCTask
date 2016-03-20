@@ -16,16 +16,16 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 /**
  * Created by Max on 19.10.2015.
  */
-public class  AtTodoMVCPageWithClearedDataAfterEachTest extends BaseTest {
+public class AtTodoMVCPageWithClearedDataAfterEachTest extends BaseTest {
 
     @Before
-    public void OpenToMVCPage(){
+    public void OpenToMVCPage() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         getWebDriver().navigate().refresh();
     }
 
     @After
-    public void clearData(){
+    public void clearData() {
         executeJavaScript("localStorage.clear()");
     }
 }

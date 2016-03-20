@@ -31,7 +31,7 @@ public class TodoMVCTest {
     }
 
     @Before
-    public void SetUp(){
+    public void SetUp() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         sleep(1000);
     }
@@ -45,7 +45,7 @@ public class TodoMVCTest {
     }
 
     @Test
-    public void testCreateTask(){
+    public void testCreateTask() {
 
         $("#new-todo").val("task1").pressEnter();
         $("#new-todo").val("task2").pressEnter();
@@ -63,9 +63,7 @@ public class TodoMVCTest {
         $$("#todo-list > li").shouldHave(size(0));
 
 
-
     }
-
 
 
 }

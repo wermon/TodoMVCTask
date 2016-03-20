@@ -23,18 +23,18 @@ public class TodoMVCTest {
 
 
     @Before
-    public void OpenToMVCPage(){
+    public void OpenToMVCPage() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         getWebDriver().navigate().refresh();
     }
 
     @After
-    public void clearData(){
+    public void clearData() {
         executeJavaScript("localStorage.clear()");
     }
 
     @Test
-    public void testTasksE2E(){
+    public void testTasksE2E() {
         createTasks("1");
         assertItemsLeftCounter(1);
 
@@ -64,56 +64,56 @@ public class TodoMVCTest {
     }
 
 
-    private void clearCompleted(){
+    private void clearCompleted() {
         $("#clear-completed").click();
         clearButton.shouldBe(hidden);
     }
 
-    private void createTasks(String... taskTexts){
-        for (String text: taskTexts){
+    private void createTasks(String... taskTexts) {
+        for (String text : taskTexts) {
             $("#new-todo").val(text).pressEnter();
         }
     }
 
-    private void deleteTask(String taskText){
+    private void deleteTask(String taskText) {
         tasks.find(exactText(taskText)).hover().find(".destroy").click();
     }
 
-    private void toggle(String taskText){
+    private void toggle(String taskText) {
         tasks.find(exactText(taskText)).find(".toggle").click();
     }
 
-    private void toggleAll(){
+    private void toggleAll() {
         $("#toggle-all").click();
     }
 
-    private void editTask(String oldName, String newName){
+    private void editTask(String oldName, String newName) {
 
         startEdit(oldName, newName).setValue(newName).pressEnter();
     }
 
-    private SelenideElement startEdit(String oldName, String newName){
+    private SelenideElement startEdit(String oldName, String newName) {
         tasks.find(exactText(oldName)).find("label").doubleClick();
         return tasks.find(cssClass("editing")).find(".edit").setValue(newName);
     }
 
-    private void goToAll(){
+    private void goToAll() {
         $(By.cssSelector("[href='#/']")).click();
     }
 
-    private void goToActive(){
+    private void goToActive() {
         $(By.cssSelector("[href='#/active']")).click();
     }
 
-    private void goToCompleted(){
+    private void goToCompleted() {
         $(By.cssSelector("[href='#/completed']")).click();
     }
 
-    private void assertTasksAre(String... texts){
+    private void assertTasksAre(String... texts) {
         tasks.filter(visible).shouldHave(exactTexts(texts));
     }
 
-    private void assertItemsLeftCounter(int counterValue){
+    private void assertItemsLeftCounter(int counterValue) {
         $("#todo-count > strong").shouldHave(exactText(Integer.toString(counterValue)));
     }
 

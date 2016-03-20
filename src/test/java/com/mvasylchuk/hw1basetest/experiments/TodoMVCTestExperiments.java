@@ -31,7 +31,7 @@ public class TodoMVCTestExperiments {
     }
 
     @Before
-    public void SetUp(){
+    public void SetUp() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         sleep(1000);
     }
@@ -45,7 +45,7 @@ public class TodoMVCTestExperiments {
     }
 
     @Test
-    public void testCreateTask(){
+    public void testCreateTask() {
 
         $("#new-todo").val("task1").pressEnter();
         $("#new-todo").val("task2").pressEnter();
@@ -63,11 +63,10 @@ public class TodoMVCTestExperiments {
         $$("#todo-list > li").shouldHave(size(0));
 
 
-
     }
 
     @Test
-    public void testTasksReview(){
+    public void testTasksReview() {
 
         SelenideElement taskNameField = $("#new-todo");
         taskNameField.val("task1").pressEnter();
@@ -86,7 +85,6 @@ public class TodoMVCTestExperiments {
         $("button#clear-completed").click();
         // verify that tasks list is cleared
         $$("#todo-list > li").shouldHave(size(0));
-
 
 
     }

@@ -25,15 +25,14 @@ public class TodoMVCTest {
     }
 
     @Before
-    public void OpenToMVCPage(){
+    public void OpenToMVCPage() {
         open("http://todomvc.com/examples/troopjs_require/#/");
-        sleep(1000  );
+        sleep(1000);
     }
 
 
-
     @Test
-    public void testTasksBase(){
+    public void testTasksBase() {
         createTasks("1", "2", "3", "4");
         assertTasksAre("1", "2", "3", "4");
 
@@ -49,29 +48,29 @@ public class TodoMVCTest {
         tasks.shouldBe(empty);
     }
 
-    private void clearCompleted(){
+    private void clearCompleted() {
         $("#clear-completed").click();
     }
 
-    private void createTasks(String... taskTexts){
-        for (String text: taskTexts){
+    private void createTasks(String... taskTexts) {
+        for (String text : taskTexts) {
             $("#new-todo").val(text).pressEnter();
         }
     }
 
-    private void deleteTask(String taskText){
+    private void deleteTask(String taskText) {
         tasks.find(exactText(taskText)).hover().find(".destroy").click();
     }
 
-    private void toggle(String taskText){
+    private void toggle(String taskText) {
         tasks.find(exactText(taskText)).find(".toggle").click();
     }
 
-    private void toggleAll(){
+    private void toggleAll() {
         $("#toggle-all").click();
     }
 
-    private void assertTasksAre(String... texts){
+    private void assertTasksAre(String... texts) {
         tasks.shouldHave(texts(texts));
     }
 

@@ -28,15 +28,14 @@ public class TodoMVCTest3 {
     }
 
     @Before
-    public void OpenToMVCPage(){
+    public void OpenToMVCPage() {
         open("http://todomvc.com/examples/troopjs_require/#/");
 
-            }
-
+    }
 
 
     @Test
-    public void testTasksE2E(){
+    public void testTasksE2E() {
         createTasks("1", "2", "3");
         assertTasksAre("1", "2", "3");
         assertItemsLeftCounter("3");
@@ -98,29 +97,29 @@ public class TodoMVCTest3 {
 //        itemsLeftCounter.shouldBe(hidden);
     }
 
-    private void clearCompleted(){
+    private void clearCompleted() {
         $("#clear-completed").click();
     }
 
-    private void createTasks(String... taskTexts){
-        for (String text: taskTexts){
+    private void createTasks(String... taskTexts) {
+        for (String text : taskTexts) {
             $("#new-todo").val(text).pressEnter();
         }
     }
 
-    private void deleteTask(String taskText){
+    private void deleteTask(String taskText) {
         tasks.find(exactText(taskText)).hover().find(".destroy").click();
     }
 
-    private void toggle(String taskText){
+    private void toggle(String taskText) {
         tasks.find(exactText(taskText)).find(".toggle").click();
     }
 
-    private void toggleAll(){
+    private void toggleAll() {
         $("#toggle-all").click();
     }
 
-    private void editTaskAndSave(String oldText, String newText){
+    private void editTaskAndSave(String oldText, String newText) {
 
         $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']", oldText))).doubleClick();
         SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
@@ -128,7 +127,7 @@ public class TodoMVCTest3 {
         input.sendKeys(newText + Keys.ENTER);
     }
 
-    private void editTaskAndCancel(String oldText, String newText){
+    private void editTaskAndCancel(String oldText, String newText) {
 
         $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']", oldText))).doubleClick();
         SelenideElement input = $(By.xpath(String.format("//*[@id='todo-list']//li//label[text()='%s']/../../input[@class='edit']", oldText)));
@@ -136,24 +135,23 @@ public class TodoMVCTest3 {
         input.sendKeys(newText + Keys.ESCAPE);
     }
 
-    private void goToFilter(String filterName){
-        if(filterName == "All" || filterName=="Active" || filterName=="Completed"){
+    private void goToFilter(String filterName) {
+        if (filterName == "All" || filterName == "Active" || filterName == "Completed") {
             $(By.xpath(String.format("//*[@id='filters']//a[text()='%s']", filterName))).click();
-        }
-        else{
+        } else {
             System.out.println(String.format("%s is wrong input parameter of method", filterName));
-                   }
+        }
     }
 
-    private void assertSelectedFilterIs(String filterName){
+    private void assertSelectedFilterIs(String filterName) {
         $(By.xpath(String.format("//*[@id='filters']//a[text()='%s' and @class='selected']", filterName))).click();
     }
 
-    private void assertTasksAre(String... texts){
+    private void assertTasksAre(String... texts) {
         tasks.shouldHave(exactTexts(texts));
     }
 
-    private void assertCompletedTasksAre(String... texts){
+    private void assertCompletedTasksAre(String... texts) {
         completedTasks.shouldHave(texts(texts));
     }
 
@@ -161,7 +159,7 @@ public class TodoMVCTest3 {
         activeTasks.shouldHave(texts(texts));
     }
 
-    private void assertItemsLeftCounter(String text){
+    private void assertItemsLeftCounter(String text) {
         itemsLeftCounter.shouldHave(exactText(text));
     }
 

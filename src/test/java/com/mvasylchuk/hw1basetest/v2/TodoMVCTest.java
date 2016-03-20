@@ -28,15 +28,14 @@ public class TodoMVCTest {
     }
 
     @Before
-    public void SetUp(){
+    public void SetUp() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         sleep(1000);
     }
 
 
-
     @Test
-    public void testTasksReview(){
+    public void testTasksReview() {
 
         SelenideElement taskNameField = $("#new-todo");
         taskNameField.val("task1").pressEnter();

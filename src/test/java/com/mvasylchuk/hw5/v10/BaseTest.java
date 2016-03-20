@@ -19,10 +19,10 @@ public class BaseTest {
 
     @Attachment(type = "image/png")
     public byte[] screenshot() throws IOException {
-        File screenshot = Screenshots.getScreenShotAsFile();
+        File screenshot = Screenshots.takeScreenShotAsFile();
+
         return Files.toByteArray(screenshot);
     }
-
 
 
 }

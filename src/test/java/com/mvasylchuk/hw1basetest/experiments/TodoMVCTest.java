@@ -30,15 +30,14 @@ public class TodoMVCTest {
     }
 
     @Before
-    public void SetUp(){
+    public void SetUp() {
         open("http://todomvc.com/examples/troopjs_require/#/");
         sleep(1000);
     }
 
 
-
     @Test
-    public void testTasksReview(){
+    public void testTasksReview() {
 
         //create tasks
         SelenideElement taskNameField = $("#new-todo");
@@ -61,7 +60,6 @@ public class TodoMVCTest {
 //        tasks.find(text("task4")).find("input.toggle").click();
 //        ElementsCollection completedTasks = $$("#todo-list > li.completed");
 //        completedTasks.shouldHave(exactTexts("task4"));
-
 
 
         // mark all tasks as complete
